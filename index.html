@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Lead — A Six-Month Dossier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #14110f;
+  --ink-2: #1c1917;
+  --ink-3: #292524;
+  --ink-4: #44403c;
+  --paper: #f5f1ea;
+  --paper-dim: #d6d3cc;
+  --paper-faint: #8b827a;
+  --amber: #d4a96c;
+  --amber-bright: #f4c277;
+  --amber-deep: #a07a3e;
+  --rust: #b8542f;
+  --rule: #3d3833;
+  --rule-soft: #2a2522;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  font-weight: 400;
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+.layout {
+  position: relative;
+  z-index: 2;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 4rem 2.5rem 8rem;
+}
+
+/* ---------- MASTHEAD ---------- */
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 3rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.eyebrow::before, .eyebrow::after {
+  content: "";
+  height: 1px;
+  background: var(--amber);
+  opacity: 0.4;
+  flex: 0 0 32px;
+}
+
+h1 {
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(3.2rem, 8vw, 6rem);
+  line-height: 0.92;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+h1 em {
+  color: var(--amber);
+  font-style: italic;
+}
+
+.subtitle {
+  margin-top: 1.75rem;
+  font-size: 1.1rem;
+  color: var(--paper-dim);
+  max-width: 64ch;
+  font-weight: 400;
+}
+
+.spec {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--paper-faint);
+  text-align: right;
+  line-height: 1.8;
+  text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+  .spec { display: none; }
+}
+
+/* ---------- DASHBOARD ---------- */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  border: 1px solid var(--rule);
+  margin-bottom: 0;
+}
+
+.stat {
+  padding: 1.4rem 1.6rem;
+  border-right: 1px solid var(--rule);
+  background: var(--ink-2);
+}
+.stat:last-child { border-right: none; }
+
+@media (max-width: 720px) {
+  .stat { border-right: none; border-bottom: 1px solid var(--rule); }
+  .stat:last-child { border-bottom: none; }
+}
+
+.stat-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  margin-bottom: 0.55rem;
+}
+
+.stat-value {
+  font-family: "Instrument Serif", serif;
+  font-size: 2.1rem;
+  color: var(--paper);
+  line-height: 1;
+  font-weight: 400;
+}
+
+.stat-value .denom {
+  color: var(--paper-faint);
+  font-size: 1.1rem;
+}
+
+.stat-value.amber { color: var(--amber); }
+
+/* ---------- PROGRESS BAR ---------- */
+.progress-track {
+  height: 3px;
+  background: var(--ink-3);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  border-left: 1px solid var(--rule);
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber-deep) 0%, var(--amber) 50%, var(--amber-bright) 100%);
+  transition: width 0.6s cubic-bezier(.2,.8,.2,1);
+  width: 0%;
+}
+
+/* ---------- CONTROLS ---------- */
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+  align-items: center;
+}
+
+.controls .ctrl, .controls button, .controls label.btn {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--paper-dim);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controls .ctrl:hover, .controls button:hover, .controls label.btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: rgba(212, 169, 108, 0.05);
+}
+
+.controls input[type="date"] {
+  background: var(--ink-2);
+  color: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 0.55rem 0.8rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  border-radius: 0;
+  color-scheme: dark;
+}
+
+.controls input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
+.ctrl-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--paper-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- EPIGRAPH ---------- */
+.epigraph {
+  border-left: 2px solid var(--amber);
+  padding: 0.5rem 0 0.5rem 1.75rem;
+  margin: 0 0 4rem;
+  font-family: "Instrument Serif", serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--paper-dim);
+  max-width: 64ch;
+  line-height: 1.4;
+}
+
+.epigraph cite {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  font-family: "JetBrains Mono", monospace;
+  font-style: normal;
+  color: var(--paper-faint);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ---------- MONTH DIVIDER ---------- */
+.month-divider {
+  margin: 5rem 0 2rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1.75rem;
+}
+
+.month-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  white-space: nowrap;
+}
+
+.month-title {
+  font-family: "Instrument Serif", serif;
+  font-size: 2.2rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+.month-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.month-divider:first-of-type {
+  margin-top: 0;
+}
+
+/* ---------- WEEK ---------- */
+.week {
+  border-top: 1px solid var(--rule);
+  padding: 2.25rem 0 1.5rem;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 2.5rem;
+}
+
+.week:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.week.current-week .week-num strong { color: var(--amber-bright); }
+
+@media (max-width: 720px) {
+  .week {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.week-meta {
+  font-family: "JetBrains Mono", monospace;
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+}
+
+.week-num {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--paper-faint);
+  text-transform: uppercase;
+}
+
+.week-num strong {
+  color: var(--amber);
+  font-size: 2.5rem;
+  display: block;
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  margin-top: 0.3rem;
+}
+
+.week-progress-mini {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  color: var(--paper-faint);
+  margin-top: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.week-progress-mini .filled {
+  color: var(--amber);
+}
+
+.week-theme {
+  font-family: "Instrument Serif", serif;
+  font-size: 1.85rem;
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.week-milestone {
+  color: var(--paper-dim);
+  font-size: 0.95rem;
+  margin-bottom: 1.4rem;
+  font-style: italic;
+  font-family: "Instrument Serif", serif;
+}
+
+.week-milestone::before {
+  content: "→ ";
+  color: var(--amber);
+  font-style: normal;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+}
+
+.days {
+  display: grid;
+  gap: 0.5rem;
+}
+
+/* ---------- DAY ---------- */
+.day {
+  border: 1px solid var(--rule);
+  background: var(--ink-2);
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 22px auto 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+}
+
+.day:hover {
+  background: var(--ink-3);
+  border-color: var(--ink-4);
+}
+
+.day.today {
+  border-color: var(--amber);
+  border-left-width: 3px;
+  background: rgba(212, 169, 108, 0.04);
+}
+
+.day.today::after {
+  content: "TODAY";
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--amber);
+  background: var(--ink);
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--amber);
+}
+
+.day.complete {
+  opacity: 0.55;
+}
+
+.day.complete .day-title {
+  text-decoration: line-through;
+  text-decoration-color: var(--paper-faint);
+  text-decoration-thickness: 1px;
+}
+
+.day-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  padding-top: 0.2rem;
+  white-space: nowrap;
+}
+
+.day-body { min-width: 0; }
+
+.day-title {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--paper);
+  line-height: 1.4;
+}
+
+.day-tasks, .day-resources {
+  margin-top: 0.85rem;
+  display: none;
+}
+
+.day.expanded .day-tasks,
+.day.expanded .day-resources {
+  display: block;
+}
+
+.day-tasks ul {
+  list-style: none;
+  padding: 0;
+}
+
+.day-tasks li {
+  padding: 0.2rem 0 0.2rem 1.4rem;
+  position: relative;
+  font-size: 0.92rem;
+  color: var(--paper-dim);
+  line-height: 1.5;
+}
+
+.day-tasks li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--amber);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+}
+
+.day-resources {
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--rule);
+  margin-top: 0.85rem;
+}
+
+.day-resources-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  margin-bottom: 0.5rem;
+}
+
+.day-resources a {
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--amber);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  display: inline-block;
+  margin-right: 0.85rem;
+  margin-bottom: 0.35rem;
+  transition: color 0.18s;
+}
+
+.day-resources a:hover {
+  color: var(--amber-bright);
+  border-bottom-color: var(--amber-bright);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+  background: var(--ink);
+}
+
+.checkbox:hover {
+  border-color: var(--amber);
+}
+
+.checkbox.checked {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.checkbox.checked::after {
+  content: "✓";
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.day-expand-icon {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  color: var(--paper-faint);
+  padding-top: 0.25rem;
+  user-select: none;
+  transition: color 0.18s;
+}
+
+.day:hover .day-expand-icon { color: var(--amber); }
+
+.day.expanded .day-expand-icon { color: var(--amber); }
+
+/* ---------- FOOTER ---------- */
+.footer {
+  margin-top: 6rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--rule);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--paper-faint);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.footer .signed {
+  font-style: italic;
+  font-family: "Instrument Serif", serif;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.storage-pill {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--rule);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  margin-left: 0.4rem;
+  cursor: help;
+  transition: all 0.18s;
+}
+
+.storage-pill[data-status="persistent"] {
+  color: var(--amber);
+  border-color: var(--amber-deep);
+}
+
+.storage-pill[data-status="best-effort"] {
+  color: var(--paper-dim);
+  cursor: pointer;
+}
+
+.storage-pill[data-status="best-effort"]:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+
+.storage-pill[data-status="unsupported"] {
+  color: var(--paper-faint);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* ---------- TOAST ---------- */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--ink-2);
+  border: 1px solid var(--amber);
+  color: var(--paper);
+  padding: 0.85rem 1.3rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+</style>
+</head>
+<body>
+<div class="layout">
+
+<header class="masthead">
+  <div class="spec" id="spec">
+    <div>FILE / 6MO_AI.LEAD</div>
+    <div>168 days · ~360 hrs</div>
+    <div>v1.0</div>
+  </div>
+  <div class="eyebrow">A six-month dossier</div>
+  <h1>From programmer<br>to <em>AI lead.</em></h1>
+  <p class="subtitle">A daily curriculum built around shipping, not studying. Two hours a day, twenty-four weeks, one capstone that lands you the role. Check off days as you go. Your progress lives in this browser; export it to your repo to sync.</p>
+</header>
+
+<div class="dashboard" id="dashboard">
+  <div class="stat">
+    <div class="stat-label">Days complete</div>
+    <div class="stat-value amber"><span id="days-done">0</span><span class="denom"> / 168</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Weeks complete</div>
+    <div class="stat-value"><span id="weeks-done">0</span><span class="denom"> / 24</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Current streak</div>
+    <div class="stat-value"><span id="streak">0</span><span class="denom"> days</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Day on plan</div>
+    <div class="stat-value" id="day-on-plan">—</div>
+  </div>
+</div>
+
+<div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div class="controls">
+  <div class="ctrl-group">
+    <span>Start →</span>
+    <input type="date" id="start-date">
+  </div>
+  <button id="export-btn">↓ Export progress</button>
+  <label class="btn" for="import-input">↑ Import progress<input type="file" id="import-input" accept="application/json,.json" hidden></label>
+  <button id="goto-today">⊙ Go to today</button>
+  <button id="reset-btn">⌫ Reset</button>
+</div>
+
+<blockquote class="epigraph">
+  The bitter lesson is that general methods that leverage computation are ultimately the most effective.
+  <cite>— Rich Sutton</cite>
+</blockquote>
+
+<main id="curriculum"></main>
+
+<footer class="footer">
+  <div>Progress saved here · <span id="storage-status" class="storage-pill">— checking</span></div>
+  <div class="signed">— Built for the long game.</div>
+</footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CURRICULUM DATA — 24 weeks × 7 days
+   ============================================================ */
+const MONTH_TITLES = {
+  1: "Foundations that pay off",
+  2: "LLMs as a tool",
+  3: "RAG & embeddings",
+  4: "Agents — the main event",
+  5: "Production & advanced",
+  6: "Lead",
+};
+
+const R = {
+  // Foundations
+  uv: { l: "uv install", u: "https://github.com/astral-sh/uv" },
+  visualNumpy: { l: "Visual NumPy (Alammar)", u: "https://jalammar.github.io/visual-numpy/" },
+  zth: { l: "Zero to Hero (Karpathy)", u: "https://karpathy.ai/zero-to-hero.html" },
+  micrograd: { l: "micrograd repo", u: "https://github.com/karpathy/micrograd" },
+  illustratedTransformer: { l: "Illustrated Transformer", u: "https://jalammar.github.io/illustrated-transformer/" },
+  buildGpt: { l: "Let's build GPT", u: "https://www.youtube.com/watch?v=kCc8FmEb1nY" },
+  tokenizerVid: { l: "Let's build the GPT Tokenizer", u: "https://www.youtube.com/watch?v=zduSFxRajkE" },
+  nanoGpt: { l: "nanoGPT repo", u: "https://github.com/karpathy/nanoGPT" },
+  raschka: { l: "Raschka book", u: "https://www.manning.com/books/build-a-large-language-model-from-scratch" },
+  // APIs / prompts / tools
+  anthropicDocs: { l: "Anthropic API docs", u: "https://docs.anthropic.com/en/api/getting-started" },
+  toolUse: { l: "Tool use docs", u: "https://docs.anthropic.com/en/docs/build-with-claude/tool-use" },
+  openaiFc: { l: "OpenAI function calling", u: "https://platform.openai.com/docs/guides/function-calling" },
+  promptCourse: { l: "Anthropic prompt course", u: "https://github.com/anthropics/prompt-eng-interactive-tutorial" },
+  promptDocs: { l: "Prompt eng overview", u: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" },
+  lilianPrompt: { l: "Lilian Weng — prompts", u: "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/" },
+  eugeneYan: { l: "Eugene Yan blog", u: "https://eugeneyan.com/" },
+  // Evals
+  hamel: { l: "Hamel — evals", u: "https://hamel.dev/blog/posts/evals/" },
+  evalsField: { l: "Eugene Yan — evals", u: "https://eugeneyan.com/writing/evals/" },
+  aiEng: { l: "AI Engineering (Huyen)", u: "https://www.oreilly.com/library/view/ai-engineering/9781098166298/" },
+  // RAG / embeddings
+  embeddings: { l: "What are embeddings?", u: "https://vickiboykis.com/what_are_embeddings/" },
+  pgvector: { l: "pgvector repo", u: "https://github.com/pgvector/pgvector" },
+  contextualRet: { l: "Contextual Retrieval", u: "https://www.anthropic.com/news/contextual-retrieval" },
+  jasonLiuRag: { l: "Jason Liu — RAG", u: "https://jxnl.co/writing/category/rag/" },
+  twelveFactor: { l: "12 Factor Agents", u: "https://github.com/humanlayer/12-factor-agents" },
+  ragas: { l: "RAGAS docs", u: "https://docs.ragas.io/" },
+  // Agents
+  buildingAgents: { l: "Building effective agents", u: "https://www.anthropic.com/research/building-effective-agents" },
+  ghuntley: { l: "Huntley — coding agent", u: "https://ghuntley.com/agent/" },
+  copilotChat: { l: "vscode-copilot-chat", u: "https://github.com/microsoft/vscode-copilot-chat" },
+  codexCli: { l: "openai/codex", u: "https://github.com/openai/codex" },
+  mcpSpec: { l: "MCP spec", u: "https://modelcontextprotocol.io/" },
+  multiAgent: { l: "Multi-agent system", u: "https://www.anthropic.com/engineering/built-multi-agent-research-system" },
+  // Production
+  langfuse: { l: "Langfuse", u: "https://langfuse.com/" },
+  caching: { l: "Prompt caching docs", u: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching" },
+  owasp: { l: "OWASP LLM Top 10", u: "https://genai.owasp.org/llm-top-10/" },
+  simon: { l: "Simon Willison", u: "https://simonwillison.net/" },
+  // Lead
+  bitter: { l: "Bitter Lesson", u: "http://incompleteideas.net/IncIdeas/BitterLesson.html" },
+  latent: { l: "Latent Space", u: "https://www.latent.space/podcast" },
+};
+
+const curriculum = [
+  // ============ MONTH 1 ============
+  { w:1, m:1, theme:"Python for ML, fast", milestone:"Working environment + first sklearn model.",
+    days:[
+      {t:"Environment setup.", x:["Install uv (or your preferred Python tooling).","Create a learning-ai repo on GitHub.","Push a README that names the goal."], r:[R.uv]},
+      {t:"NumPy fundamentals.", x:["Read 'A Visual Intro to NumPy'.","Do 10 array exercises (slicing, broadcasting, axis ops).","Commit a numpy_warmup.ipynb."], r:[R.visualNumpy]},
+      {t:"Pandas + Matplotlib in 90 minutes.", x:["Load Titanic CSV.","Groupby + describe.","Plot one chart that tells a story."]},
+      {t:"First sklearn model.", x:["Train linear regression on a real dataset.","Plot the fit. Look at residuals.","Commit the notebook."]},
+      {t:"Karpathy intro: micrograd (part 1).", x:["Watch the first ~45 min of episode 1.","Don't just watch — pause and re-derive."], r:[R.zth, R.micrograd]},
+      {t:"Karpathy: micrograd (part 2).", x:["Code along — implement Value, _backward, the autograd graph.","Run the toy training loop."]},
+      {t:"Saturday note.", x:["Write 300 words: 'What I learned this week, in plain English.'","Push it to a notes/ folder in your repo."]},
+    ]},
+  { w:2, m:1, theme:"Neural networks, from numpy.", milestone:"2-layer MLP from scratch on MNIST.",
+    days:[
+      {t:"Karpathy episode 2: makemore (bigram).", x:["Watch the first half.","Replicate the bigram model in a notebook."]},
+      {t:"Karpathy episode 2: continued.", x:["Watch the second half.","Add the MLP version."]},
+      {t:"Build a 2-layer MLP from numpy alone.", x:["Forward pass.","Manual backprop.","Train on a tiny synthetic set first to verify."]},
+      {t:"MNIST training.", x:["Wire the MLP to MNIST.","Hit 95%+ test accuracy.","Plot the loss curve."]},
+      {t:"Read Raschka chapter 1.", x:["Skim if too theoretical.","Take 5 bullet-point notes."], r:[R.raschka]},
+      {t:"Push the MLP project.", x:["Write a real README explaining what you built and why.","Add a GIF or plot to it."]},
+      {t:"Saturday note.", x:["Write 200 words: 'Backprop, in plain English.'","Imagine your audience is a smart non-engineer."]},
+    ]},
+  { w:3, m:1, theme:"Transformers from first principles.", milestone:"A working nanoGPT trained on Shakespeare.",
+    days:[
+      {t:"Watch 'Let's build GPT' — first 45 min.", x:["Pause every time the math hits.","Take handwritten notes — really."], r:[R.buildGpt]},
+      {t:"Watch the second half.", x:["Trace shapes through every layer.","Don't move on until attention clicks."]},
+      {t:"Read 'The Illustrated Transformer'.", x:["Read once, fast.","Read again, slow.","Annotate."], r:[R.illustratedTransformer]},
+      {t:"Build attention from scratch.", x:["Implement scaled dot-product attention in numpy.","Sanity-check against PyTorch's nn.functional.scaled_dot_product_attention."]},
+      {t:"Build the rest of nanoGPT.", x:["Multi-head, residuals, layer norm, FFN.","Wire the training loop."], r:[R.nanoGpt]},
+      {t:"Train on Shakespeare.", x:["Get loss <2.0.","Generate a sample.","Marvel briefly."]},
+      {t:"Saturday note.", x:["Write 400 words: 'How attention actually works.'","Use one sentence with no jargon."]},
+    ]},
+  { w:4, m:1, theme:"Tokenization + your own model.", milestone:"Tiny GPT trained on your own code.",
+    days:[
+      {t:"Karpathy tokenizer video — first half.", x:["Watch.","Take notes on why tokenization is the source of so many LLM bugs."], r:[R.tokenizerVid]},
+      {t:"Tokenizer video — second half.", x:["Watch.","Compare GPT-2 vs cl100k_base on a sample of your code."]},
+      {t:"BPE in code.", x:["Either implement a small BPE or use tiktoken to study one.","Visualize how 'function' tokenizes."]},
+      {t:"Build your training set.", x:["Concatenate all your public GitHub repos into one corpus.","Strip secrets."]},
+      {t:"Train nanoGPT on your code.", x:["Train for ~30 min on CPU or 5 min on GPU.","Generate samples that resemble your style."]},
+      {t:"Iterate.", x:["Try larger model, longer context.","Compare loss curves.","Save the best run."]},
+      {t:"Saturday note: 'How an LLM works, for an exec.'", x:["500 words.","No jargon.","This is a leadership artifact — write it like one."]},
+    ]},
+
+  // ============ MONTH 2 ============
+  { w:5, m:2, theme:"API mastery.", milestone:"`ask` CLI with streaming + memory.",
+    days:[
+      {t:"Get keys, hello world.", x:["Anthropic API key.","OpenAI API key.","First curl + first Python call to each."], r:[R.anthropicDocs]},
+      {t:"Read the Anthropic docs end to end.", x:["Yes, all of them.","Take notes on rate limits, models, pricing."]},
+      {t:"`ask` CLI v1.", x:["argparse + simple Q&A.","Print the response, exit."]},
+      {t:"Add streaming.", x:["Switch to the streaming endpoint.","Print tokens as they arrive."]},
+      {t:"Structured output.", x:["Force the model to return JSON for a task.","Validate with pydantic."]},
+      {t:"Add SQLite memory.", x:["Persist conversations.","Add `ask --continue` to resume."]},
+      {t:"Polish + push.", x:["README with screenshots/asciinema.","First user: yourself, daily, for the rest of the program."]},
+    ]},
+  { w:6, m:2, theme:"Tool use.", milestone:"CLI with file/search/python tools.",
+    days:[
+      {t:"Read Anthropic tool-use docs.", x:["End to end.","Hand-trace what the JSON looks like both directions."], r:[R.toolUse]},
+      {t:"Read OpenAI function-calling docs.", x:["Compare the schemas.","Note the small differences that bite later."], r:[R.openaiFc]},
+      {t:"Add `read_file`.", x:["Define the tool schema.","Implement it.","Add to your CLI."]},
+      {t:"Add `web_search`.", x:["Brave or Tavily API.","Cache responses to a local SQLite."]},
+      {t:"Add `run_python` (sandboxed).", x:["Use a subprocess + tempdir.","No filesystem write outside tempdir."]},
+      {t:"Multi-step sequences.", x:["Test: 'find what changed in this file last week and explain.'","Watch the model chain tools."]},
+      {t:"Saturday note: 'Tool calling under the hood.'", x:["Diagram the round trip in your notes/.","Save it — you'll reuse it."]},
+    ]},
+  { w:7, m:2, theme:"Prompt engineering.", milestone:"Three prompt versions for a real work task.",
+    days:[
+      {t:"Anthropic interactive course, ch 1–3.", x:["Do the exercises.","Don't skim."], r:[R.promptCourse]},
+      {t:"Course ch 4–6.", x:["Same.","Note the patterns that surprise you."]},
+      {t:"Course ch 7–9 + appendix.", x:["Finish.","Index the techniques in your notes/."]},
+      {t:"Lilian Weng on prompt engineering.", x:["Read once.","Star sections relevant to your work."], r:[R.lilianPrompt]},
+      {t:"Eugene Yan: patterns for LLM apps.", x:["Skim the index.","Read 3 posts deeply."], r:[R.eugeneYan]},
+      {t:"Pick a real work task.", x:["Something boring and recurring.","Write 3 prompt versions: naive, structured, expert."]},
+      {t:"Document.", x:["Compare outputs side by side.","Note which won and why. This is your method now."]},
+    ]},
+  { w:8, m:2, theme:"Evals — the leverage skill.", milestone:"Eval harness comparing 3 models.",
+    days:[
+      {t:"Hamel on evals.", x:["Read the canonical post.","Take notes."], r:[R.hamel]},
+      {t:"Eugene Yan on evals.", x:["Read the field guide.","Compare to Hamel."], r:[R.evalsField]},
+      {t:"Chip Huyen — eval chapters.", x:["Read carefully.","This is the chapter you'll re-read every month."], r:[R.aiEng]},
+      {t:"Build the harness skeleton.", x:["A function: run(prompt, examples, model) → results.","A function: score(result, expected) → metric."]},
+      {t:"Write 30 examples.", x:["For your task from week 7.","Mix easy, medium, adversarial."]},
+      {t:"LLM-as-judge scoring.", x:["For fuzzy outputs.","Cross-check 5 manually to calibrate the judge."]},
+      {t:"Run the leaderboard.", x:["Prompts × {Sonnet, GPT-4-class, an open model via Together}.","Publish the results in your repo."]},
+    ]},
+
+  // ============ MONTH 3 ============
+  { w:9, m:3, theme:"Embeddings, deeply.", milestone:"'Find similar' tool with pgvector.",
+    days:[
+      {t:"Read 'What are embeddings?'", x:["The free PDF by Vicki Boykis.","Take 10 bullet notes."], r:[R.embeddings]},
+      {t:"Generate + visualize.", x:["Embed 1000 texts (issues, commits, anything).","UMAP or t-SNE to 2D.","Look for clusters."]},
+      {t:"pgvector locally.", x:["Postgres + pgvector extension.","Insert embeddings.","HNSW index."], r:[R.pgvector]},
+      {t:"Build 'find similar' v1.", x:["Pick a real corpus (your GitHub issues, your Notion pages).","Top-5 nearest neighbors."]},
+      {t:"Manually evaluate.", x:["20 queries.","Mark good/bad.","Find the failure mode."]},
+      {t:"Filters + tuning.", x:["Hybrid: filter on metadata first, semantic second.","Compare results."]},
+      {t:"Push + document.", x:["README with example queries.","List the failure modes you found."]},
+    ]},
+  { w:10, m:3, theme:"Vector stores.", milestone:"Wiki search CLI.",
+    days:[
+      {t:"How HNSW works.", x:["Read one good explainer.","Sketch the graph in your notes."]},
+      {t:"Compare pgvector / Qdrant / Chroma.", x:["Same data, same query.","Note the latency and the dev experience."]},
+      {t:"Pick one, plan ingestion.", x:["What's the source of truth?","How will it stay fresh?"]},
+      {t:"Ingest your wiki.", x:["Notion, Confluence, Drive — whatever your team uses.","Chunk thoughtfully."]},
+      {t:"Build the search CLI.", x:["`wiki ask 'how do we deploy staging?'`","Show the source for every answer."]},
+      {t:"Iterate on chunking.", x:["Try 500-token chunks. Try 2000-token. Try 'by heading'.","Measure on 10 real questions."]},
+      {t:"Document choices.", x:["A decisions.md in the repo.","Future-you and your team will thank you."]},
+    ]},
+  { w:11, m:3, theme:"Production RAG.", milestone:"Hybrid search + reranker.",
+    days:[
+      {t:"Anthropic Contextual Retrieval.", x:["Read the post.","Implement the prepended-context idea on your corpus."], r:[R.contextualRet]},
+      {t:"Jason Liu on RAG.", x:["Read 3 posts.","Steal his eval mentality."], r:[R.jasonLiuRag]},
+      {t:"12 Factor Agents.", x:["Read end to end.","Star the 'context is everything' factor."], r:[R.twelveFactor]},
+      {t:"Add hybrid search.", x:["BM25 + semantic.","Reciprocal rank fusion."]},
+      {t:"Add a reranker.", x:["Cohere Rerank or an open one (bge-reranker).","Top-50 → Top-5."]},
+      {t:"Compare against eval set.", x:["Naive vs hybrid vs hybrid+rerank.","Measure recall@5."]},
+      {t:"Write up findings.", x:["A blog-post-shaped doc in your repo.","With numbers."]},
+    ]},
+  { w:12, m:3, theme:"RAG eval + agentic RAG.", milestone:"4 retrieval variants compared.",
+    days:[
+      {t:"RAGAS.", x:["Read the docs.","Run their metrics on your corpus."], r:[R.ragas]},
+      {t:"Agentic RAG patterns.", x:["The agent decides when and what to retrieve.","Read 2 explainers."]},
+      {t:"Build a 30-question eval set.", x:["Real questions from real users (or yourself).","Include the right answer for each."]},
+      {t:"Implement agentic RAG.", x:["Tool: search_corpus.","Let the model call it as needed."]},
+      {t:"Run all 4 variants.", x:["No retrieval / naive / hybrid+rerank / agentic.","Same eval set."]},
+      {t:"Analyze.", x:["Which variant wins on what kinds of questions?","Where does each fail?"]},
+      {t:"Saturday note: RAG vs FT vs long-context.", x:["A decision framework.","One page. You'll cite this for years."]},
+    ]},
+
+  // ============ MONTH 4 ============
+  { w:13, m:4, theme:"Agent loop from first principles.", milestone:"300-line coding agent of your own.",
+    days:[
+      {t:"Anthropic — Building effective agents.", x:["Read end to end.","Take notes on the orchestrator/worker patterns."], r:[R.buildingAgents]},
+      {t:"Huntley workshop — part 1.", x:["Follow it.","Type, don't copy-paste."], r:[R.ghuntley]},
+      {t:"Workshop — part 2.", x:["Continue.","Get to the first working tool call."]},
+      {t:"Workshop — parts 3–4.", x:["Add multi-tool.","See the agent succeed and fail in interesting ways."]},
+      {t:"Workshop — parts 5–6.", x:["Finish.","You now have a coding agent."]},
+      {t:"Run it on your own project.", x:["Real task: 'add a cache to module X.'","Watch it work or fail."]},
+      {t:"Document failures.", x:["10 things it got wrong.","Hypothesize fixes for each."]},
+    ]},
+  { w:14, m:4, theme:"Reading production code.", milestone:"Notes on Copilot Chat + Codex CLI.",
+    days:[
+      {t:"Clone Copilot Chat.", x:["Get it building locally.","Set a breakpoint somewhere interesting."], r:[R.copilotChat]},
+      {t:"Read its system prompt.", x:["Find where prompts live.","Annotate it line by line."]},
+      {t:"Trace one tool call end to end.", x:["From user input to model response.","Map the data flow in your notes."]},
+      {t:"Clone openai/codex.", x:["Compare structure.","Note the design tradeoffs."], r:[R.codexCli]},
+      {t:"Compare designs.", x:["Where do they agree?","Where do they diverge — and why might that be?"]},
+      {t:"Refactor your agent.", x:["Steal one specific pattern (planning step, structured edit format, etc).","Measure if it helps."]},
+      {t:"Write up the comparison.", x:["1500 words.","Publish it (internal blog or public).","This is leadership-grade output."]},
+    ]},
+  { w:15, m:4, theme:"MCP — Model Context Protocol.", milestone:"Custom MCP server in production use.",
+    days:[
+      {t:"Read the spec.", x:["It's short.","Sketch the message types."], r:[R.mcpSpec]},
+      {t:"Run an existing server.", x:["Filesystem, GitHub, or similar.","Connect it to Claude Code."]},
+      {t:"Plan your custom server.", x:["What internal capability would 10x your team if Claude could call it?","Pick one."]},
+      {t:"Build it — part 1.", x:["Skeleton.","One tool that returns dummy data.","Connect end to end."]},
+      {t:"Build it — part 2.", x:["Real implementation.","Auth, error handling, logging."]},
+      {t:"Connect to Claude Code.", x:["Use it for 1 hour on a real task.","Note rough edges."]},
+      {t:"Use for real, document.", x:["Use it for a full work day.","Write a README that gets a colleague using it tomorrow."]},
+    ]},
+  { w:16, m:4, theme:"Subagents, parallelism.", milestone:"Subagent improving big-codebase tasks.",
+    days:[
+      {t:"Anthropic multi-agent post.", x:["Read.","Take notes on context isolation."], r:[R.multiAgent]},
+      {t:"Plan subagent architecture.", x:["What does the search subagent see?","What does it return?"]},
+      {t:"Implement search subagent — pt 1.", x:["A separate context window.","Tools: read_file, grep.","Returns a structured summary."]},
+      {t:"Implement — pt 2.", x:["Wire it into your main agent as a tool.","Test on small case."]},
+      {t:"Test on big-codebase task.", x:["A real task that touches 10+ files.","With and without the subagent."]},
+      {t:"Measure improvement.", x:["Time, tokens, success rate.","Write it down."]},
+      {t:"Saturday note: agent architecture for our team.", x:["A 2-page design.","This is the artifact you'll show your manager."]},
+    ]},
+
+  // ============ MONTH 5 ============
+  { w:17, m:5, theme:"Observability + cost.", milestone:"Cost dashboard for your agent.",
+    days:[
+      {t:"Pick observability tool.", x:["Langfuse / Helicone / Phoenix.","Pick the one that fits your stack."], r:[R.langfuse]},
+      {t:"Wire it in.", x:["Every API call instrumented.","Test that traces show up."]},
+      {t:"Read prompt caching docs.", x:["Anthropic + OpenAI.","Note the cache-hit economics."], r:[R.caching]},
+      {t:"Add caching.", x:["For your high-traffic prompts.","Measure cost before/after."]},
+      {t:"Build the cost dashboard.", x:["Tokens/task, latency p50/p99, cost/task, fail rate.","One screen, glanceable."]},
+      {t:"Analyze last week's usage.", x:["Where did the money go?","Where is latency hurting?"]},
+      {t:"Document optimizations.", x:["A playbook your team can apply.","Specific numbers."]},
+    ]},
+  { w:18, m:5, theme:"Security.", milestone:"Threat model for your agent.",
+    days:[
+      {t:"OWASP LLM Top 10.", x:["Read each.","Map each to your system."], r:[R.owasp]},
+      {t:"Simon Willison on prompt injection.", x:["Read his recent posts.","He's the canonical source."], r:[R.simon]},
+      {t:"Lethal trifecta.", x:["Private data + untrusted content + external comms.","Find where you have the trifecta."]},
+      {t:"Try to break your own agent.", x:["Inject hostile content via a tool result.","Try to exfiltrate something."]},
+      {t:"Add guardrails.", x:["Input filtering, output filtering, sandboxing.","Pick what fits the threat model."]},
+      {t:"Write the threat model.", x:["Assets, threats, controls, residual risk.","2 pages."]},
+      {t:"Document security posture.", x:["A doc your security team will respect.","This unblocks every future AI launch."]},
+    ]},
+  { w:19, m:5, theme:"Fine-tuning, when it actually matters.", milestone:"Honest verdict on a real FT.",
+    days:[
+      {t:"Raschka — fine-tuning chapters.", x:["Read carefully.","Note when LoRA vs full FT."]},
+      {t:"Hamel: 'FT is rarely the answer.'", x:["Read.","Internalize the bar."]},
+      {t:"Pick a narrow task.", x:["One where prompt engineering plateaued.","Prepare 100+ examples."]},
+      {t:"Set up Together AI or Modal.", x:["Smallest model that could plausibly work.","Llama 3.1 8B is a good baseline."]},
+      {t:"Run the LoRA fine-tune.", x:["Watch the loss curve.","Don't trust it — eval it."]},
+      {t:"Evaluate vs base + best prompt.", x:["Use your harness from week 8.","Be ruthless."]},
+      {t:"Honest writeup.", x:["Was it worth it?","If no, say so.","This honesty is what makes a leader."]},
+    ]},
+  { w:20, m:5, theme:"Distillation, small models.", milestone:"Cost-optimized version of a working task.",
+    days:[
+      {t:"Distillation literature.", x:["Read 2–3 explainers.","Sketch the technique in your notes."]},
+      {t:"Anthropic on Haiku-class models.", x:["Read.","Note when to reach for the small model."]},
+      {t:"Pick a task Sonnet does well.", x:["Something with frequent calls.","Document the cost today."]},
+      {t:"Try Haiku + better prompting.", x:["Same task, better prompt.","Measure on your eval set."]},
+      {t:"Add few-shot examples.", x:["3–5 high-quality examples.","Re-measure."]},
+      {t:"Measure cost reduction.", x:["Tokens, latency, dollars.","Show the table."]},
+      {t:"Saturday note: cost playbook.", x:["A 1-page playbook your team can follow.","Include the decision tree."]},
+    ]},
+
+  // ============ MONTH 6 ============
+  { w:21, m:6, theme:"System design for AI features.", milestone:"3 design docs in hand.",
+    days:[
+      {t:"AI Engineering — chapters 1–3.", x:["Read.","Skim the parts you've already lived."], r:[R.aiEng]},
+      {t:"AI Engineering — chapters 4–5.", x:["Read.","Take pattern notes."]},
+      {t:"AI Engineering — final chapters.", x:["Finish.","Now you've seen the whole picture."]},
+      {t:"Eugene Yan — patterns.", x:["Read his synthesis posts.","Compare to Huyen."]},
+      {t:"Pick 3 features for your company.", x:["High-leverage. Realistic.","Different shapes (RAG, agent, classifier)."]},
+      {t:"Write the design docs.", x:["1 page each.","Data flow, model choice, eval plan, cost estimate, security model."]},
+      {t:"Get feedback from a colleague.", x:["Pick one engineer you respect.","Iterate. This is the muscle of a lead."]},
+    ]},
+  { w:22, m:6, theme:"Buy vs build, vendor evaluation.", milestone:"A vendor evaluation memo.",
+    days:[
+      {t:"Latent Space — episode 1.", x:["Practitioner war stories.","Pick episodes from the index."], r:[R.latent]},
+      {t:"Latent Space — episode 2.", x:["Continue.","Note recurring themes."]},
+      {t:"Pick a vendor.", x:["Real or hypothetical.","Pick one your company is considering."]},
+      {t:"Research them.", x:["Docs, pricing, security posture, customer logos.","Look for absences too."]},
+      {t:"Write the evaluation.", x:["What they do, what they don't.","Where they lock you in. What you'd build instead."]},
+      {t:"Add ROI calculation.", x:["Including hidden integration cost and switching cost.","Be honest about uncertainty."]},
+      {t:"Send to your manager.", x:["Yes, really.","This is the move that puts you on the AI lead radar."]},
+    ]},
+  { w:23, m:6, theme:"Capstone — ship something real at work.", milestone:"A live AI feature with real users.",
+    days:[
+      {t:"Define success.", x:["What does 'works' mean? Be specific.","Two metrics, max."]},
+      {t:"Recruit users.", x:["Five colleagues willing to try it.","Set expectations: this is a beta."]},
+      {t:"Ship — part 1.", x:["The minimum that delivers value.","Don't gold-plate."]},
+      {t:"Ship — part 2.", x:["Fix the things that broke in part 1.","Add observability."]},
+      {t:"Measure.", x:["Did it move the metric?","If no, why?"]},
+      {t:"Iterate.", x:["One round of fixes based on user feedback.","Hold the line on scope."]},
+      {t:"Document outcomes.", x:["A short writeup with numbers.","Send it widely."]},
+    ]},
+  { w:24, m:6, theme:"Position yourself.", milestone:"You are the AI lead.",
+    days:[
+      {t:"Memo draft: 'AI at our company, 12 months out.'", x:["2 pages.","Where it fits, where it doesn't, what you'll ship in 6 / 12 months."]},
+      {t:"Iterate the memo.", x:["Read it cold the next day.","Cut a third."]},
+      {t:"Get feedback.", x:["From your manager and one trusted senior.","Iterate again."]},
+      {t:"Blog post 1: technical.", x:["How you built X.","Specific. Numbers. Code."]},
+      {t:"Blog post 2: strategic.", x:["Lessons from leading an AI project.","This is what gets external readers."]},
+      {t:"Set up the weekly AI radar.", x:["Latent Space + Simon Willison + arxiv-sanity.","30 min, every Friday. Forever."], r:[R.bitter, R.latent, R.simon]},
+      {t:"Celebrate.", x:["You did the thing.","Now do it again, every year."]},
+    ]},
+];
+
+/* ============================================================
+   STATE MANAGEMENT — persistent browser storage
+   localStorage for the data, navigator.storage.persist() to
+   protect it from browser eviction under storage pressure.
+   ============================================================ */
+const STORAGE_KEY = 'ai-lead-tracker-v1';
+
+let state = {
+  startDate: null,         // ISO yyyy-mm-dd
+  completed: {},           // { "w-d": true }
+  lastSaved: null,
+};
+
+// 'persistent' = protected · 'best-effort' = evictable · 'unsupported' = old browser
+let persistenceStatus = 'unknown';
+
+async function checkPersistence() {
+  if (!navigator.storage || typeof navigator.storage.persisted !== 'function') {
+    persistenceStatus = 'unsupported';
+  } else {
+    try {
+      const isPersisted = await navigator.storage.persisted();
+      persistenceStatus = isPersisted ? 'persistent' : 'best-effort';
+    } catch(e) {
+      persistenceStatus = 'unsupported';
+    }
+  }
+  updatePersistenceIndicator();
+}
+
+async function requestPersistence(showFeedback) {
+  if (!navigator.storage || typeof navigator.storage.persist !== 'function') {
+    persistenceStatus = 'unsupported';
+    updatePersistenceIndicator();
+    if (showFeedback) toast('This browser does not support persistent storage. Use Export to back up.');
+    return false;
+  }
+  try {
+    const granted = await navigator.storage.persist();
+    persistenceStatus = granted ? 'persistent' : 'best-effort';
+    updatePersistenceIndicator();
+    if (showFeedback) {
+      toast(granted
+        ? 'Storage marked persistent. Your progress will not be evicted.'
+        : 'Browser declined for now. Use the app a bit and try again.');
+    }
+    return granted;
+  } catch(e) {
+    console.warn('persist() failed', e);
+    return false;
+  }
+}
+
+async function reportStorageQuota() {
+  // Optional: log how much we're using vs the quota
+  if (!navigator.storage || typeof navigator.storage.estimate !== 'function') return null;
+  try {
+    const est = await navigator.storage.estimate();
+    return est;
+  } catch { return null; }
+}
+
+function updatePersistenceIndicator() {
+  const el = document.getElementById('storage-status');
+  if (!el) return;
+  const labels = {
+    'persistent': '◉ Persistent',
+    'best-effort': '○ Best-effort · click to upgrade',
+    'unsupported': '◌ Local only',
+    'unknown': '— checking',
+  };
+  const titles = {
+    'persistent': 'Your progress is protected from browser eviction.',
+    'best-effort': 'Stored locally, but the browser may clear it under storage pressure. Click to request persistent storage.',
+    'unsupported': 'This browser does not support persistent storage. Use Export to back up.',
+    'unknown': '',
+  };
+  el.textContent = labels[persistenceStatus];
+  el.title = titles[persistenceStatus] || '';
+  el.dataset.status = persistenceStatus;
+}
+
+function saveState() {
+  state.lastSaved = new Date().toISOString();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch(e) {
+    console.error('Could not save to localStorage', e);
+    toast('Save failed — storage may be full.');
+    return;
+  }
+  // Opportunistically upgrade to persistent on user-gesture saves.
+  // Browsers grant this more readily after the user has demonstrated engagement.
+  if (persistenceStatus === 'best-effort' || persistenceStatus === 'unknown') {
+    requestPersistence(false);
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = { ...state, ...JSON.parse(raw) };
+  } catch(e) { console.warn('Could not load state', e); }
+}
+
+/* ============================================================
+   PROGRESS COMPUTATIONS
+   ============================================================ */
+function totalDays() { return curriculum.reduce((n,w) => n + w.days.length, 0); }
+
+function daysCompleted() {
+  return Object.values(state.completed).filter(Boolean).length;
+}
+
+function weeksCompleted() {
+  return curriculum.filter(w => w.days.every((_,i) => state.completed[`${w.w}-${i}`])).length;
+}
+
+function streak() {
+  // count contiguous days from "today" backward where the user has completed any day
+  // simple version: just count contiguous completed days in linear curriculum order ending at the most recent completion
+  const flat = [];
+  curriculum.forEach(w => w.days.forEach((_,i) => flat.push(`${w.w}-${i}`)));
+  let count = 0;
+  for (let i = flat.length - 1; i >= 0; i--) {
+    if (state.completed[flat[i]]) count++;
+    else if (count > 0) break;
+  }
+  return count;
+}
+
+function dayOnPlan() {
+  if (!state.startDate) return null;
+  const start = new Date(state.startDate + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const diff = Math.floor((today - start) / (1000*60*60*24)) + 1;
+  if (diff < 1) return null;
+  if (diff > totalDays()) return totalDays();
+  return diff;
+}
+
+function todayWeekDayIdx() {
+  // returns [weekIdx, dayIdx] based on dayOnPlan
+  const dop = dayOnPlan();
+  if (!dop) return null;
+  let count = 0;
+  for (let wi = 0; wi < curriculum.length; wi++) {
+    const wDays = curriculum[wi].days.length;
+    if (dop <= count + wDays) return [wi, dop - count - 1];
+    count += wDays;
+  }
+  return null;
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function renderDashboard() {
+  document.getElementById('days-done').textContent = daysCompleted();
+  document.getElementById('weeks-done').textContent = weeksCompleted();
+  document.getElementById('streak').textContent = streak();
+  const dop = dayOnPlan();
+  document.getElementById('day-on-plan').innerHTML = dop ? `${dop}<span class="denom"> / 168</span>` : '—';
+  const pct = (daysCompleted() / totalDays()) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function renderCurriculum() {
+  const container = document.getElementById('curriculum');
+  const today = todayWeekDayIdx();
+  let html = '';
+  let lastMonth = 0;
+
+  curriculum.forEach((week, wi) => {
+    if (week.m !== lastMonth) {
+      html += `
+        <div class="month-divider" id="month-${week.m}">
+          <span class="month-label">Month ${week.m}</span>
+          <span class="month-title">${MONTH_TITLES[week.m]}</span>
+          <span class="month-rule"></span>
+        </div>`;
+      lastMonth = week.m;
+    }
+
+    const weekDoneCount = week.days.filter((_,i) => state.completed[`${week.w}-${i}`]).length;
+    const isCurrentWeek = today && today[0] === wi;
+
+    html += `
+      <section class="week ${isCurrentWeek ? 'current-week' : ''}" id="week-${week.w}">
+        <div class="week-meta">
+          <div class="week-num">Week<strong>${String(week.w).padStart(2,'0')}</strong></div>
+          <div class="week-progress-mini"><span class="filled">${weekDoneCount}</span>/${week.days.length} done</div>
+        </div>
+        <div class="week-content">
+          <h3 class="week-theme">${week.theme}</h3>
+          <p class="week-milestone">${week.milestone}</p>
+          <div class="days">
+            ${week.days.map((d,di) => renderDay(week, wi, d, di, today)).join('')}
+          </div>
+        </div>
+      </section>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderDay(week, wi, day, di, today) {
+  const key = `${week.w}-${di}`;
+  const isComplete = !!state.completed[key];
+  const isToday = today && today[0] === wi && today[1] === di;
+  const dayNum = curriculum.slice(0, wi).reduce((n,w) => n + w.days.length, 0) + di + 1;
+  const tasksHtml = day.x ? `
+    <div class="day-tasks"><ul>${day.x.map(t => `<li>${t}</li>`).join('')}</ul></div>
+  ` : '';
+  const resourcesHtml = (day.r && day.r.length) ? `
+    <div class="day-resources">
+      <div class="day-resources-label">Resources</div>
+      ${day.r.map(r => `<a href="${r.u}" target="_blank" rel="noopener">${r.l} ↗</a>`).join('')}
+    </div>` : '';
+
+  return `
+    <div class="day ${isComplete ? 'complete' : ''} ${isToday ? 'today' : ''}" data-key="${key}">
+      <div class="checkbox ${isComplete ? 'checked' : ''}" data-action="toggle"></div>
+      <div class="day-num">D${String(dayNum).padStart(3,'0')}</div>
+      <div class="day-body">
+        <div class="day-title">${day.t}</div>
+        ${tasksHtml}
+        ${resourcesHtml}
+      </div>
+      <div class="day-expand-icon">⊕</div>
+    </div>`;
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+function attach() {
+  document.getElementById('curriculum').addEventListener('click', e => {
+    const day = e.target.closest('.day');
+    if (!day) return;
+    const key = day.dataset.key;
+    if (e.target.closest('[data-action="toggle"]') || e.target.classList.contains('checkbox')) {
+      state.completed[key] = !state.completed[key];
+      saveState();
+      renderDashboard();
+      renderCurriculum();
+    } else if (!e.target.closest('a')) {
+      day.classList.toggle('expanded');
+    }
+  });
+
+  const sd = document.getElementById('start-date');
+  sd.value = state.startDate || '';
+  sd.addEventListener('change', () => {
+    state.startDate = sd.value || null;
+    saveState();
+    renderDashboard();
+    renderCurriculum();
+  });
+
+  document.getElementById('export-btn').addEventListener('click', exportProgress);
+  document.getElementById('import-input').addEventListener('change', importProgress);
+  document.getElementById('reset-btn').addEventListener('click', resetProgress);
+  document.getElementById('goto-today').addEventListener('click', goToToday);
+
+  // Click the storage pill to manually request persistent upgrade
+  document.getElementById('storage-status').addEventListener('click', () => {
+    if (persistenceStatus === 'best-effort') requestPersistence(true);
+  });
+}
+
+function exportProgress() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'progress.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported progress.json — commit it to your repo to sync.');
+}
+
+function importProgress(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      if (imported.completed) state = { ...state, ...imported };
+      saveState();
+      renderDashboard();
+      renderCurriculum();
+      toast('Progress imported.');
+    } catch(err) {
+      toast('Could not parse that file.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function resetProgress() {
+  if (!confirm('Reset all progress and start date?')) return;
+  state = { startDate: null, completed: {}, lastSaved: null };
+  saveState();
+  document.getElementById('start-date').value = '';
+  renderDashboard();
+  renderCurriculum();
+  toast('Reset.');
+}
+
+function goToToday() {
+  const today = todayWeekDayIdx();
+  if (!today) {
+    toast('Set a start date first.');
+    return;
+  }
+  const el = document.querySelector(`#week-${curriculum[today[0]].w}`);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const dayEl = el.querySelectorAll('.day')[today[1]];
+    if (dayEl && !dayEl.classList.contains('expanded')) dayEl.classList.add('expanded');
+  }
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+loadState();
+renderDashboard();
+renderCurriculum();
+attach();
+checkPersistence();
+// Try once on load — won't always be granted without a gesture,
+// but if the user has already used the site enough times the browser
+// may grant it automatically.
+requestPersistence(false);
+</script>
+</body>
+</html>
